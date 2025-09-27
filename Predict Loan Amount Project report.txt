@@ -1,0 +1,309 @@
+Predict Loan Amount Project report
+
+Project Title :- End To End Machine learning
+
+Introduction :- In this project we are building a machine learning model  which may helps to able to learn from data, find patterns and make prediction, Classification, Automation, optimization and Taking best decision Support.
+
+Data:- Realistic synthetic dataset of 10,000 rows and 20 features, designed to mimic challenges in real-world data science projects.
+
+
+Steps:-
+
+Before building any model we may using some libraries those are given below.
+
+1.Data handling libraries= NumPy and Pandas.
+
+2.Visualization Libraries =  Seaborn and Matplotlib.
+
+3.Data splitting = Train Test Split.
+
+4.To Build Pipelines = pipeline.
+
+5. Preprocessing Libraries for (Scaling, Encoding, Imputation) = StandardScaler, OneHotEncoder, OrdibnalEncoder, MinMaxScaler, SimpleImputer, ColumnTransformer.
+
+6.ModelBuilding Libraries = LogisticRegression, DecisionTreeClassifier, RandomForestClassifier, SVC, xgboost, XGBClassifier.
+
+7.Matics/ which are used to evaluate the performance of your machine learning models = accuracy_score,precision_score,recall_score,f1_score, confusion_matrix, classification_report.
+
+8.Resampling (handing imblance in data) = SMOTE.
+
+9. Hyperparamater Tuining Library = GridSearchCV or RandomizedSearchCV.
+
+10.Helpling Library = Warning  (to ignore warnings).
+
+
+1. Exploratory Data Analysis (EDA):
+ In this EDA first we may read the data  and checking Nullvalus, Duplicatevalues and Uniquevalues. and after if they are in our data we may drop that .
+
+ And after we may build some plots like Histogram
+=> A histogram shows the distribution of numerical data. And it divides values into bins (intervals) and counts how many data points fall in each bin.
+=> it helps for Data preprocessing which means it helps to decide transformation line(normalization,Scaling).
+
+df.hist(figsize = (16,12),bins=30,edgecolor="black")
+=>bins=5 → divides the range into 5 intervals (0–20k, 20k–40k, …).
+=> bins=30 → divides the range into 30 intervals.(about 3k width each)
+full description of each plot whether it is right or strong or left swek and having outliers or not
+1.age:- -->Almost flat/uniform distribution. -->No skew → data is balanced across age groups.
+
+2.income -->Strong right-skewed distribution. -->Most customers earn below 100,000, only a few with very high income. -->Outliers are higher range.
+
+3.savings -->Also right-skewed. -->Majority of customers have low savings (close to 0–5000). -->A few outliers are having.
+
+4.monthly_expenses -->Right-skewed again. -->Most customers have low to moderate expenses (< 5000). -->Some outliers are exist.
+
+5.num_dependents -->Most customers are at 0, 1, or 2 dependents so the frequency drops sharply after 2 which means long tail on right side (positive skewed). -->Most customers have 0–2 dependents. -->no outliers are lying.
+
+6.credit_score -->Bell-shaped (normal distribution) centered around 600–700. -->Most customers have average credit scores.
+
+7.loan_amount -->Strong right-skew. -->Most loans are small (< 50,000). -->outliers very large loan amounts exist but rare.
+
+8.loan_term_months -->Peaks at certain intervals. -->Loan terms are not continuous.
+
+9.employment_years -->Between 0 and 10 majority of customers are either fresh employees or have only a few years of experience. -->The bars after 15 years are very small.That means only a small fraction of customers have long-term work experience. -->Right skew (positive skew) means the data has a longer tail.
+
+10.recent_default -->no skewness because is a binary variable, it can only take 0 or 1. -->For binary variables, there are no outliers.
+
+11.has_credit_card --> it was completelly similar to recent_default why because it is also a binary variables
+
+12.signup_dayofweek -->Because having 7 bars, one for each day, the bars look almost equal in height → meaning customers signed up fairly evenly across all days. -->It may need encoding method. -->No outliers.
+
+13.debt_to_income -->The distribution is right-skewed, because most customers have low DTI ratios (< 0.5). A few customers have high DTI (> 1.0), meaning debts exceed their income (financially risky). -->and there was some outliers
+
+14.sin_age -->sin_age is a feature-engineered variable created from age. Range: -1 to 1, evenly spread. -->No skewness problem, no outliers.
+
+15.cos_age -->cos_age is a cosine transformation of age. Range: -1 to 1. -->No outliers possible. Used along with sin_age to provide a cyclical representation of age. -->Raw age = directly interpretable (20, 30, 40 years). sin_age + cos_age = abstract, but helps ML models learn periodic or non-linear relationships.
+
+And After Bar blopts, countplots, Boxplots
+
+=> barplot :- To shows the average of a numeric variable for each category, in (Input:) we needs both a categorical variable (x) and a numeric variable (y).
+=>Countplot :- To shows the count (frequency) of each category in a categorical variable, in (Input:) we Only needs a categorical column (Seaborn counts it automatically).
+=>A boxplot:- It is a visualization of the distribution of numeric data:
+ Detect outliers ,if you see dots far away from the box it is an outliers.
+ Check skewness, if the box is not centered (longer whisker on one side), data is skewed.
+
+to find OutLiners
+# two methods (1.IQR)  > use this method when the data is not normal
+            # (3_Sigma Rules) > use this method when the data is normal
+IQR steps
+
+Find Q1 and Q3
+Find IQR (IQR=Q3-Q1)
+Find Lower limit and Upper Limit
+Lower Limit=Q1-1.5*IQR
+Upper Limit= Q3+1.5*IQR *Find records/Values which are grater than upper limit and less than lower limit
+
+In EDA we may build HeatMap and Pairplot:
+
+from heatmap we may conclud
+conclusion:>
+Hear map explain that -->A correlation heatmap explains which variables are related, how strongly, and in what direction. It’s a quick way to see dependencies between your features before model building.
+Colour by colour explain
+➡️Red🔴: Very strong positive correlation. As one variable increases, the other also increases.
+➡️light Red : it is also positive and move together but not perfectly
+➡️Blue 🔵 : Very strong negative correlation. One goes up, the other almost always goes down.
+➡️light blue : it is negative correlation. When one increases, the other tends to decrease.
+➡️White : it was a negative Correlation when one increase another tends to decrease
+
+final conclusion-->
+Loan amount and debt-to-income ratio have a fairly strong positive correlation (~0.70).
+This means that as the loan amount increases, the debt-to-income ratio also tends to rise.
+That makes intuitive sense: bigger loans usually put more burden on someone’s income, raising their debt-to-income.
+
+Pairplot
+=>it is a combinaton of (scatter plot, Histogram, Trends)
+=>Scatter plot = This helps you see relationships, correlations, or clusters between features.
+=>Histogram = This tells you about skewness, outliers, or whether values are normally distributed.
+=>Trends = You can spot linear relationships, non-linear relationships, or no relationship at all.You may also notice outliers.
+
+Class balance in target default risk
+# target_default_risk :- It has two classes:
+# 0 → customer did NOT default (safe borrower).
+# 1 → customer defaulted (risky borrower).
+# Out of the 10,000 customers in your dataset, how many belong to each class (0 vs 1).
+
+2.Data preprocessing:
+ Here in this process first we may do saparating the catigorical and numerical columns.
+We do this process to understand the data distribution and it helps us understand the dataset deeply.It guides us in cleaning, preprocessing, and feature engineering before training a model.
+
+next we are creating a pipline 
+In this pipeline only we may do Columns Transfer, scalling data and impuation.
+
+And after transforming the data we'll fit it into with new variable name 
+Beforing donig smote first we'll train the data and the fit the data into that SMOTE
+
+1.SOMTE:-This technique is a popular method used in machine learning and data preprocessing, especially for handling imbalanced datasets.
+
+
+3. Model building: 
+
+Beforing model building first we'll train the data and fiting the data
+
+models we build
+
+Logisticregression.
+Decision Tree.
+Support Vector Machine (SVM).
+Random Forest.
+XGBoost.
+
+
+LogiscticRegression:--
+# Logistic Regression is a supervised machine learning algorithm used for classification problems, not regression (despite the name).
+#It predict the probability that a data point belongs to a particular class.
+# The value of Output between 0 and 1, which can be converted into class labels using a threshold (usually 0.5).
+
+
+2.DecisionTree:--
+# A Decision Tree is a supervised machine learning algorithm used for classification and regression.
+# It splits the data into branches at different decision points (nodes) based on feature values.
+# ARoot node → where the first split happens 
+# Internal nodes → further splits
+# Leaf nodes → final predictions (class or value)
+# At each split, the algorithm chooses the best feature and threshold to separate the data. The "best split" is chosen using impurity measures.
+# For classification type Gini Imputer and Entropy.
+# For Regression type Mean Squared Error (MSE) or Mean Absolute Error (MAE) to find best splits.
+
+
+3.SVM:--
+# SVM (Support Vector Machine) is a supervised machine learning algorithm used mainly for classification, but it can also do regression.
+# It was segritate into 2 catogries which are Linear and Non-linear.
+# Linear SVM = Works when data is linearly separable (a straight line can separate classes).
+# Non-Linear = When data is not linearly separable, SVM uses kernel trick to project data into higher dimensions.
+# Common kernels:1.linear → straight line  2.rbf (Radial Basis Function) → handles complex boundaries  3.poly → polynomial decision boundary.
+# Works well with high-dimensional data (many features). Effective even with small datasets.
+# This algorithm that finds the best separating boundary.
+
+
+4.RandomForestClassifier:--
+# Random Forest is an ensemble model (many decision trees combined). Works well for both classification and regression.
+# It can handle nonlinear relationships and categorical features (after encoding).
+# By using GridSearchCV tries different combinations of hyperparameters (like number of trees, depth, split rules) and finds the best performing model.
+# your dataset, randomly select subsets of rows (samples) and columns (features), train a Decision tree on each subset and repeatthis process for many trees (e.g., 100 or 500).
+# For prediction:
+# Each tree votes (predicts a class), random Forest picks the majority vote as the final prediction.
+# Works well for both small and large datasets.
+# Handles both categorical and numerical features, also handile to outliers and noise.
+
+
+
+5.XGBClassifier (Extreame Greadient Boosting):--
+# XGBoost stands for Extreme Gradient Boosting. It’s a type of ensemble learning, specifically a boosting algorithm.
+# Unlike Random Forest (bagging), boosting builds trees sequentially, each tree learning from the mistakes of the previous ones.
+# It may handles missing values automatically and it Can work with heterogeneous data types (numerical + categorical if encoded).
+# it Has built-in regularization to prevent overfitting (L1 and L2) it is Very fast and scalable for large datasets.
+# And finally Can optimize for different objectives: classification, regression, ranking, etc.
+
+
+Evaluate using **accuracy, precision, recall, F1-score, confusion matrix**.
+
+
+
+4. Hyperparameter Tuning:
+	
+		Hyperparameter tuning is the process of finding the best set of hyperparameters for a machine learning model to improve its performance. Proper tuning helps the model generalize well and achieve higher accuracy, precision, recall, or F1-score depending on the task.
+	
+This is the final step in Building a model Building.
+
+We can use any of GridSearchCV or RandomizedSearchCV to tune models, so i'm using GridSearchCV.
+
+
+GridSearchCV:-
+# GridSearchCV is a hyperparameter tuning method.It automatically tests multiple combinations of hyperparameters for a model to find the best performing set.
+# Systematically tries different combinations and picks the tastiest dish best accuracy.
+# This works on Logistic regression /  Random forest /  XGBoost.
+# To improve model performance by systematically searching for best hyperparameters.
+
+
+
+OUTPUT FOR MODEL:-
+
+1.LogisticRegression
+
+Accuracy: 0.929
+Precision: 0.950354609929078
+Recall: 0.9097963142580019
+F1 score: 0.929633300297324
+Confusion Matrix: [[920  49]
+ [ 93 938]]
+Classification Report:               precision    recall  f1-score   support
+
+           0       0.91      0.95      0.93       969
+           1       0.95      0.91      0.93      1031
+
+    accuracy                           0.93      2000
+   macro avg       0.93      0.93      0.93      2000
+weighted avg       0.93      0.93      0.93      2000
+ 
+After GSCV:-Final Accuracy: 0.929
+
+
+2.DecisionTreeClassification:-
+
+Accuracy: 0.9245
+Precision: 0.9347826086956522
+Recall: 0.9175557710960233
+F1 score: 0.9260890846793931
+Confusion Matrix: [[903  66]
+ [ 85 946]]
+Classification Report:               precision    recall  f1-score   support
+
+           0       0.91      0.93      0.92       969
+           1       0.93      0.92      0.93      1031
+
+    accuracy                           0.92      2000
+   macro avg       0.92      0.92      0.92      2000
+weighted avg       0.92      0.92      0.92      2000
+
+
+
+3.SVM(Support Vector Machine):-
+
+Accuracy: 0.9255
+Precision: 0.9490835030549898
+Recall: 0.903976721629486
+F1 score: 0.9259811227024342
+Confusion Matrix: [[919  50]
+ [ 99 932]]
+Classification Report:               precision    recall  f1-score   support
+
+           0       0.90      0.95      0.93       969
+           1       0.95      0.90      0.93      1031
+
+    accuracy                           0.93      2000
+   macro avg       0.93      0.93      0.93      2000
+weighted avg       0.93      0.93      0.93      2000
+
+
+
+4.RandomForestClassifier:-
+
+Accuracy: 0.9405
+Precision: 0.9523809523809523
+Recall: 0.9311348205625606
+F1 score: 0.9416380578715057
+Confusion Matrix: [[921  48]
+ [ 71 960]]
+Classification Report:               precision    recall  f1-score   support
+
+           0       0.93      0.95      0.94       969
+           1       0.95      0.93      0.94      1031
+
+    accuracy                           0.94      2000
+   macro avg       0.94      0.94      0.94      2000
+weighted avg       0.94      0.94      0.94      2000
+
+After GSCV:-Final Accuracy : 0.9455
+
+
+
+5.XGBClassifier:-
+ Accuracy : 0.9615
+  
+After GSCV:- Final Accuracy: 0.962
+
+
+
+Conclusion:-
+
+In this project, we successfully built and evaluated multiple machine learning models on a synthetic dataset of 10,000 records and 20 features to predict loan default risk. The workflow included exploratory data analysis (EDA), preprocessing, handling class imbalance using SMOTE, model training, and hyperparameter tuning.
+
